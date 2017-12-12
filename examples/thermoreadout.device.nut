@@ -5,10 +5,16 @@
 local led = null;
 local savedData = null;
 local tickFlag = true;
+local refreshTimer = null;
 
-// FUNCTIONS
 function displayWeather(data) {
     savedData = data;
+    
+    if (refreshTimer != null) imp.cancelwakeup(refreshTimer);
+    refreshTimer = imp.wakeup(1.0, function() {
+        displayWeather(savedData);
+    });
+    
     local temp = savedData != null ? savedData.temp.tointeger() : 0;
 
     led.setGlyph(0, (temp < 0 ? 0x40 : 0x00))
@@ -18,10 +24,6 @@ function displayWeather(data) {
        .display();
     
     tickFlag = !tickFlag;
-    
-    imp.wakeup(1.0, function() {
-        displayWeather(savedData);
-    });
 }
 
 // START
@@ -29,4 +31,4 @@ function displayWeather(data) {
 led = GroveTM1637(hardware.pin9, hardware.pin8);
 
 // Set up agent interaction
-agent.on("thermoreadout.show.forecast", displayWeather);
+agent.on("homeweather.show.forecast", displayWeather);
