@@ -29,4 +29,4 @@ function displayWeather(data) {
 led = GroveTM1637(hardware.pin9, hardware.pin8);
 
 // Set up agent interaction
-agent.on("homeweather.show.forecast", displayWeather);
+agent.on("thermoreadout.show.forecast", displayWeather);
