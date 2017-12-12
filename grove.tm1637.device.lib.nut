@@ -26,7 +26,7 @@ const GROVE_TM1637_HIGH = 1;
 const GROVE_TM1637_LOW = 0;
 const GROVE_TM1637_ADDR_AUTO = 0x40;
 const GROVE_TM1637_ADDR_FIXED = 0x44;
-const GROVE_TM1637_dataPin_CMD = 0xC0;
+const GROVE_TM1637_DATA_CMD = 0xC0;
 const GROVE_TM1637_DISPLAY_CMD = 0x88;
 
 class GroveTM1637 {
@@ -57,18 +57,25 @@ class GroveTM1637 {
     }
 
     function setBrightness(value) {
-        // Convert percentage brightness to range 0-7
-        // 0 = 1/16, 8 = 14/16 duty cyle
-        _brightness = ((value / 100) * 8 - 1);
+        // Value should be in range 0-7, where
+        // 0 = 1/16, 7 = 14/16 duty cyle
         if (_brightness < 0) _brightness = 0;
         if (_brightness > 7) _brightness = 7;
         _display();
+    }
+    
+    function getBrightness() {
+        return _brightness;
     }
 
     function setColon(state = true) {
         // Indicate whether the central colon should be lit (true)
         if (typeof state == "boolean") _colonState = state;
         return this;
+    }
+    
+    function getColonState() {
+        return _colonState;
     }
 
     function setDigit(digit = 0, data = 0) {
@@ -92,6 +99,7 @@ class GroveTM1637 {
     
     function clearDisplay() {
         _buffer = [0,0,0,0];
+        _colonState = false;
         _display();
     }
     
@@ -105,7 +113,7 @@ class GroveTM1637 {
 
         // Send the command value, then each segment value
         _start();
-        _writeByte(GROVE_TM1637_dataPin_CMD);
+        _writeByte(GROVE_TM1637_DATA_CMD);
         for (local i = 0 ; i < 4 ; i++) { 
             _writeByte(_buffer[i] + (_colonState ? 0x80 : 0x00));
         }
