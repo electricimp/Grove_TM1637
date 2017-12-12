@@ -9,11 +9,7 @@ local tickFlag = true;
 // FUNCTIONS
 function displayWeather(data) {
     savedData = data;
-    local temp = 0;
-    
-    if (savedData != null) {
-        temp = savedData.temp.tointeger();
-    }
+    local temp = savedData != null ? savedData.temp.tointeger() : 0;
 
     led.setGlyph(0, (temp < 0 ? 0x40 : 0x00))
        .setDigit(1, (temp < 0 ? -1 * temp / 10 : temp / 10))
