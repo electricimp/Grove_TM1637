@@ -101,6 +101,10 @@ imp.wakeup(20, function() {
 });
 ```
 
+### power(*[isOn]*) ###
+
+This method is used to power cycle the display. When the library is instantiated the display will always be powered up, but can subsequently be turned off by passing `false` as the argument of *isOn*. Note that *power()* will only affect the display if the argument of *isOn* does not match the display’s current state: calling `power(true)` or `power()` when the display is already powered up will have no effect.
+
 ## License ##
 
 The Grove TM1637 library is releases under the [MIT license](https://github.com/electricimp/Grove_TM1637/blob/master/LICENSE).
