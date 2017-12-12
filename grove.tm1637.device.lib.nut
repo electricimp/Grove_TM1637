@@ -35,8 +35,7 @@ class GroveTM1637 {
     _clockPin = null;
     _buffer = null;
     _chars = [0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, // 0-9
-              0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71, // A-F
-              0x40, 0x63, 0x00]; // -, degree, space
+              0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71]; // A-F
     _brightness = 7;
     _colonState = true;
     _power = true;
@@ -80,17 +79,40 @@ class GroveTM1637 {
     }
 
     function setDigit(digit = 0, data = 0) {
-         // Set the digit to the required value:
-         // 0-17, ie. 0-9, A-F, -, degree, or space
-         // Digits are 0-3
-        
-        if (data < 0 || data >= _chars.len()) {
+        // Set the digit to the required value:
+        // 0-17, ie. 0-9, A-F
+        // Digits are 0-3
+        if ((typeof data == "integer" && (data < 0 || data >= _chars.len()))  || typeof data != "integer") {
             server.error("GROVE_TM1637.setDigit() data out of range");
             return;
         }
         
-         _buffer[digit] = _chars[data];
-         return this;
+        _buffer[digit] = _chars[data];
+        return this;
+    }
+    
+    function setGlyph(digit = 0, data = 0x7F) {
+        // Set the digit to the required glyph, where 'data' indicates
+        // which segments are to be lit. The segment-to-bit mapping runs 
+        // clockwise from the top around the outside of the
+        // matrix; the inner segment is bit 6:
+        //
+        //         0
+        //         _
+        //     5 |   | 1
+        //       |   |
+        //         - <----- 6
+        //     4 |   | 2
+        //       | _ |
+        //         3
+        
+        if ((typeof data == "integer" && (data < 0 || data > 0x7F)) || typeof data != "integer") {
+            server.error("GROVE_TM1637.setGlyph() data out of range");
+            return;
+        }
+        
+        _buffer[digit] = data;
+        return this;
     }
     
     function display() {
