@@ -129,7 +129,7 @@ class GroveTM1637 {
 
         // Send the display command to draw the display at the requested brightness
         _start();
-        _writeByte(GROVE_TM1637_DISPLAY_CMD + _brightness);
+        _writeByte(_power ? GROVE_TM1637_DISPLAY_CMD + _brightness : 0x80);
         _stop();
     }
 
