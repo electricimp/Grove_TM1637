@@ -106,7 +106,7 @@ This method sets the Seeed 4-Digit Display’s brightness. The value of *brightn
 #### Example ####
 
 ```squirrel
-led.setBrightness(0)
+led.setBrightness(0);
 ```
 
 ### getBrightness() ###
