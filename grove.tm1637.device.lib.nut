@@ -39,6 +39,7 @@ class GroveTM1637 {
               0x40, 0x63, 0x00]; // -, degree, space
     _brightness = 7;
     _colonState = true;
+    _power = true;
 
     constructor(dataPin = null, clockPin = null) {
         // Reject unset parameters
@@ -70,7 +71,7 @@ class GroveTM1637 {
 
     function setColon(state = true) {
         // Indicate whether the central colon should be lit (true)
-        if (typeof state == "boolean") _colonState = state;
+        if (typeof state == "bool") _colonState = state;
         return this;
     }
     
@@ -101,6 +102,13 @@ class GroveTM1637 {
         _buffer = [0,0,0,0];
         _colonState = false;
         _display();
+    }
+    
+    function power(state = true) {
+        if (typeof state == "bool" && state != _power) {
+            _power = state;
+            _display();
+        }
     }
     
     // ********** Private Functions - Do not call directly **********
