@@ -31,7 +31,7 @@ led = GroveTM1637(hardware.pin9, hardware.pin8);
 
 ### setDigit(*digit, value*) ###
 
-This method sets the required digit to show the specified value. This can be any value from 0 to 15 &mdash; these will be rendered as 0 to 9 and A to F. In addition, you can specify 16, 17 or 18, which will render, respectively, a minus symbol (-), a degree symbol (&deg;) or a clear space ( ).
+This method sets the required digit (0-3, left to right) to show the specified number. This can be any value from 0 to 15 &mdash; these will be rendered as 0 to 9 and A to F. In addition, you can specify 16, 17 or 18, which will render, respectively, a minus symbol (-), a degree symbol (&deg;) or a clear space ( ).
 
 The method returns *this*, the context variable, allowing you to chain multiple calls as shown in the example below. Calling *setDigit()* does not update the display &mdash; you will need to call *display()* to do so.
 
@@ -42,6 +42,43 @@ led.setDigit(0, 13)
    .setDigit(1, 14)
    .setDigit(2, 10)
    .setDigit(3, 13)
+   .display();
+```
+
+### setGlyph(*digit, segmentPattern*) ###
+
+This method sets the specified digit (0-3, left to right) to show the specified segments. Which segments you wish to be lit are chosen by counting them in a clockwise fashion, with 0 at the top and the center segment as 6:
+
+```
+    0
+    _
+5 |   | 1
+  |   |
+    - <----- 6
+4 |   | 2
+  | _ |
+    3
+```
+
+So for an ‘E’, for example, segments 0, 3, 4, 5 and 6 need to be lit. These segments correspond to the bits of the 8-bit integer that must be set to generate the glyph: in this case `01111001` in binary or `0x79` in hexadecimal:
+
+```
+Segment   6 5 4 3 2 1 0
+Bit     0 1 1 1 1 0 0 1
+```
+
+Segment/bit 7 is ignored.
+
+The method returns *this*, the context variable, allowing you to chain multiple calls as shown in the example below. Calling *setGlyph()* does not update the display &mdash; you will need to call *display()* to do so.
+
+#### Example ####
+
+```squirrel
+// Write 'sync' in the display
+led.setGlyph(0, 0x6D)
+   .setGlyph(1, 0x6E)
+   .setGlyph(2, 0x37)
+   .setGlyph(3, 0x39)
    .display();
 ```
 
@@ -78,7 +115,7 @@ This method returns the current state of the display’s brightness: an integer 
 
 ### display() ###
 
-This method causes the library to update the Seeed 4-Digit Display. See *setDigit()* and *setColon()*, above, for examples of its use.
+This method causes the library to update the Seeed 4-Digit Display. See *setDigit()*, *setGlyph()* and *setColon()*, above, for examples of its use.
 
 ### clearDisplay() ###
 
