@@ -31,11 +31,15 @@ const GROVE_TM1637_DISPLAY_CMD = 0x88;
 
 class GroveTM1637 {
 
+    static VERSION = "1.0.0";
+    
     _dataPin = null;
     _clockPin = null;
     _buffer = null;
+    
     _chars = [0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, // 0-9
               0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71]; // A-F
+    
     _brightness = 7;
     _colonState = true;
     _power = true;
@@ -59,6 +63,11 @@ class GroveTM1637 {
     function setBrightness(value) {
         // Value should be in range 0-7, where
         // 0 = 1/16, 7 = 14/16 duty cyle
+        if (typeof value == "integer" || typeof value == "float") {
+            _brightness = value;
+        } else {
+            server.error("GROVE_TM1637.setBrightness() argument out of range or an incorrect type");
+        }
         if (_brightness < 0) _brightness = 0;
         if (_brightness > 7) _brightness = 7;
         _display();
@@ -70,7 +79,11 @@ class GroveTM1637 {
 
     function setColon(state = true) {
         // Indicate whether the central colon should be lit (true)
-        if (typeof state == "bool") _colonState = state;
+        if (typeof state == "bool") {
+            _colonState = state;
+        } else {
+            server.error("GROVE_TM1637.setColon() argument should be a boolean");
+        }
         return this;
     }
     
@@ -83,7 +96,12 @@ class GroveTM1637 {
         // 0-17, ie. 0-9, A-F
         // Digits are 0-3
         if ((typeof data == "integer" && (data < 0 || data >= _chars.len()))  || typeof data != "integer") {
-            server.error("GROVE_TM1637.setDigit() data out of range");
+            server.error("GROVE_TM1637.setDigit() data argument out of range or an incorrect type");
+            return;
+        }
+        
+        if ((typeof digit == "integer" && (digit < 0 || digit > 3)) || typeof digit != "integer") {
+            server.error("GROVE_TM1637.setDigit() digit argument out of range or an incorrect type");
             return;
         }
         
@@ -107,7 +125,12 @@ class GroveTM1637 {
         //         3
         
         if ((typeof data == "integer" && (data < 0 || data > 0x7F)) || typeof data != "integer") {
-            server.error("GROVE_TM1637.setGlyph() data out of range");
+            server.error("GROVE_TM1637.setGlyph() data argument out of range or an incorrect type");
+            return;
+        }
+        
+        if ((typeof digit == "integer" && (digit < 0 || digit > 3)) || typeof digit != "integer") {
+            server.error("GROVE_TM1637.setGlyph() digit argument out of range or an incorrect type");
             return;
         }
         
@@ -127,9 +150,13 @@ class GroveTM1637 {
     }
     
     function power(state = true) {
-        if (typeof state == "bool" && state != _power) {
-            _power = state;
-            _display();
+        if (typeof state == "bool") {
+            if (state != _power) {
+                _power = state;
+                _display();
+            }
+        } else {
+            server.error("GROVE_TM1637.power() argument should be a boolean");
         }
     }
     
