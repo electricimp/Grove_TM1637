@@ -31,7 +31,7 @@ const GROVE_TM1637_DISPLAY_CMD = 0x88;
 
 class GroveTM1637 {
 
-    static VERSION = "1.0.0";
+    static VERSION = "1.0.1";
     
     _dataPin = null;
     _clockPin = null;
