@@ -1,8 +1,8 @@
-# Grove TM1637
+# Grove TM1637 #
 
 This library provides a simple hardware driver for a TM1637-driven display connected via the Grove system, such as the [Seeed 4-Digit Display](http://wiki.seeed.cc/Grove-4-Digit_Display/). This can be used with any imp-based product or development board that supports the Grove system, such as the [impExplorer™ Kit](https://developer.electricimp.com/hardware/resources/reference-designs/explorerkit).
  
-**To use this library, add** `#require "Grove.TM1637.device.lib.nut:1.0.0"` **to the top of your device code.**
+**To use this library, paste the contents of the accompanying file,** `Grove.TM1637.device.lib.nut` **, at the top of your device code.**
 
 ## Class Usage ##
 
@@ -15,9 +15,6 @@ Instantiating the library requires you to specify the data and clock pins to be 
 #### Example ####
 
 ```squirrel
-// Load the Grove TM1637 library
-#require "Grove.TM1637.device.lib.nut:1.0.0"
-
 // Instantiate the driver on an impExplorer
 led = GroveTM1637(hardware.pin9, hardware.pin8);
 ```
